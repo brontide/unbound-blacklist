@@ -1,0 +1,6 @@
+unbound:
+  build: .
+  restart: always
+  ports:
+    - 192.168.111.20:53:53
+    - 192.168.111.20:53:53/udp
