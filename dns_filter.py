@@ -37,7 +37,15 @@ from glob import glob
 import codecs
 
 blacklist = set()
-matches = { 'youtube ads': re.compile('r\d+.+sn.+\.googlevideo\.com\.$',re.I) }
+#matches = { 'youtube ads': re.compile('r\d+.+sn-(8xgp1vo|p5qlsnll|a5mekner|vgqs7nez|vgqs7n7k|vgqsenes|p5qs7n7s|p5qlsnzd|p5qlsnsy|p5qlsnsy).+\.googlevideo\.com\.$',re.I) }
+#matches = { 'youtube ads': re.compile('r\d+.+sn-.*[76olrzksedyd]\.googlevideo\.com\.$',re.I) }
+matches = { 
+        'tapjoy': re.compile('.*tapjoy[\.\-]com', re.I),
+        'moatads': re.compile('.*moatads.com', re.I),
+        'doubleclick': re.compile('.*doubleclick.net', re.I),
+        'youtube': re.compile('.*8xgp1vo\-xfg.+googlevideo.com', re.I),
+        'beacon 1': re.compile('.*imrworldwide.com', re.I),
+        }
 
 def hostfile_to_set(filename):
     '''
@@ -68,7 +76,7 @@ def is_filtered(name):
     '''
     Match the name against our lists
     '''
-    if name in blacklist or name.rstrip('.') in blacklist:
+    if name in blacklist or name[:-1] in blacklist:
         log_info("dns_filter.py: " + name + " found in blacklist")
         return True
     for tag, regexp in matches.items():
@@ -83,12 +91,54 @@ def deinit(id):
 def inform_super(id, qstate, superqstate, qdata):
     return True
 
+# Decode names/strings from response message
+def decodedata(rawdata,start):
+    text = ''
+    remain = rawdata[2]
+    for c in rawdata[3+start:]:
+       if remain == 0:
+           text += '.'
+           remain = c
+           continue
+       remain -= 1
+       text += chr(c).lower()
+    return text.strip('.')
+
+def decodename(list):
+    return b'.'.join(list).decode('ascii')
+
+def decodemsg(msg, types=['A', 'AAAA', 'CNAME', 'MX', 'NS', 'PTR', 'SVR']):
+    rep = msg.rep
+    for i in range(0,rep.an_numrrsets):
+        rrset = rep.rrsets[i]
+        rk = rrset.rk
+        type = rk.type_str.upper()
+        dname = decodename(rk.dname_list).rstrip('.').lower()
+        if dname:
+            log_info("dns_filter.py: " + 'Starting on RESPONSE \"' + dname + '\" (RR:' + type + ')')
+            data = rrset.entry.data
+            # Get data
+            for j in range(0,data.count):
+                answer = data.rr_data[j]
+                if type in types:
+                    if type == 'A':
+                        yield dname, type, "%d.%d.%d.%d"%(answer[2],answer[3],answer[4],answer[5])
+                    elif type == 'AAAA':
+                        yield dname, type, "%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x"%(answer[2],answer[3],answer[4],answer[5],answer[6],answer[7],answer[8],answer[9],answer[10],answer[11],answer[12],answer[13],answer[14],answer[15],answer[16],answer[17])
+                    elif type in ('CNAME', 'NS', 'PTR'):
+                        yield dname, type, decodedata(answer,0)
+                    elif type == 'MX':
+                        yield dname, type, decodedata(answer,1)
+                    elif type == 'SRV':
+                        yield dname, type, decodedata(answer,5)
+                        
+
 def operate(id, event, qstate, qdata):
 
     if (event == MODULE_EVENT_NEW) or (event == MODULE_EVENT_PASS):
 
         # Check if whitelisted.
-        name = b'.'.join(qstate.qinfo.qname_list).decode('ascii')
+        name = decodename(qstate.qinfo.qname_list)
         log_info("dns_filter.py: Checking "+name)
 
         if (is_filtered(name)):
@@ -112,7 +162,27 @@ def operate(id, event, qstate, qdata):
             return True
 
     if event == MODULE_EVENT_MODDONE:
+
 #        log_info("pythonmod: iterator module done")
+
+        msg = qstate.return_msg
+        if msg:
+            blocked = False
+            for dname, dnstype, value in decodemsg(msg, types=['A']):
+                if is_filtered(dname):
+                    blocked = True
+                elif value.startswith('63.117.14'):
+                    log_info("Blocking youtube ad")
+                    blocked = True
+
+            if blocked:
+                qstate.return_rcode = RCODE_REFUSED
+                # Invalidate any cached entry
+                invalidateQueryInCache(qstate, msg.qinfo)
+
+                # Allow response modification (Security setting)
+                qstate.return_msg.rep.security = 2
+
         qstate.ext_state[id] = MODULE_FINISHED 
         return True
       
