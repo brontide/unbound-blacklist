@@ -43,8 +43,9 @@ matches = {
         'tapjoy': re.compile('.*tapjoy[\.\-]com', re.I),
         'moatads': re.compile('.*moatads.com', re.I),
         'doubleclick': re.compile('.*doubleclick.net', re.I),
-        'youtube': re.compile('.*8xgp1vo\-xfg.+googlevideo.com', re.I),
+        #'youtube': re.compile('.*8xgp1vo\-xfge.+googlevideo.com', re.I),
         'beacon 1': re.compile('.*imrworldwide.com', re.I),
+        'beacon 2': re.compile('.*appsflyer', re.I),
         }
 
 def hostfile_to_set(filename):
@@ -171,9 +172,9 @@ def operate(id, event, qstate, qdata):
             for dname, dnstype, value in decodemsg(msg, types=['A']):
                 if is_filtered(dname):
                     blocked = True
-                elif value.startswith('63.117.14'):
-                    log_info("Blocking youtube ad")
-                    blocked = True
+                #elif value.startswith('63.117.14'):
+                #    log_info("Blocking youtube ad")
+                #    blocked = True
 
             if blocked:
                 qstate.return_rcode = RCODE_REFUSED
