@@ -11,5 +11,7 @@ ADD filter.d /etc/unbound/filter.d
 EXPOSE 53:53
 EXPOSE 53:53/udp
 
+HEALTHCHECK dig @127.0.0.1 www.google.com
+
 CMD ["/usr/sbin/unbound","-d","-v"]
 
