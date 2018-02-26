@@ -5,15 +5,6 @@ Heavily inspired by
 dns_filter.py: Copyright (C) 2014 Oliver Hitz <oliver@net-track.ch>
 dns-firewall.py: v3.75-20171226 Copyright (C) 2017 Chris Buijs <cbuijs@chrisbuijs.com>
 
-For every query sent to unbound, the extension checks if the name is in the
-whitelist or in the blacklist. If it is in the whitelist, processing continues
-as usual (i.e. unbound will resolve it). If it is in the blacklist, unbound
-stops resolution and returns the IP address configured in intercept_address.
-
-The whitelist and blacklist matching is done with every domain part of the
-requested name. So, if www.domain.com is requested, the extension checks
-whether www.domain.com, domain.com or .com is listed. 
-
 Install and configure:
 
 - copy dns_filter.py to /etc/unbound/dns_filter.py
@@ -27,7 +18,8 @@ Install and configure:
   python:
     python-script: "/etc/unbound/dns_filter.py"
 
-- create /etc/unbound/blacklist and /etc/unbound/whitelist as you desire
+- create /etc/unbound/filter.d/<file> with standard hostfile format.  Lines
+  starting with 0.0.0.0 are blacklisted.
 
 - restart unbound
 
