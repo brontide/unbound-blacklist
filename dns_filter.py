@@ -145,7 +145,7 @@ def operate(id, event, qstate, qdata):
     if (event == MODULE_EVENT_NEW) or (event == MODULE_EVENT_PASS):
 
         name = decodedata(qstate.qinfo.qname)
-        log_info("dns_filter.py: Checking %s"%(name))
+        #log_info("dns_filter.py: Checking %s"%(name))
 
         if (is_filtered(name)):
 
@@ -174,7 +174,7 @@ def operate(id, event, qstate, qdata):
             if msg:
                 blocked = False
                 for dname, dnstype, value in decodemsg(msg, types=['A','AAAA','CNAME']):
-                    log_info("dns_filter.py: Checkin return %s %s %s"%(dname, dnstype, str(value)))
+                    #log_info("dns_filter.py: Checkin return %s %s %s"%(dname, dnstype, str(value)))
                     if is_filtered(dname):
                         blocked = True
                         break
@@ -194,6 +194,6 @@ def operate(id, event, qstate, qdata):
         qstate.ext_state[id] = MODULE_FINISHED 
         return True
       
-    log_err("pythonmod: bad event")
+    #log_err("pythonmod: bad event")
     qstate.ext_state[id] = MODULE_ERROR
     return True
