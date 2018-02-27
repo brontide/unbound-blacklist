@@ -1,0 +1,13 @@
+version: "3.4"
+
+services:
+  unbound:
+    build: .
+    restart: always
+    ports:
+      - "192.168.111.20:53:53"
+      - "192.168.111.20:53:53/udp"
+      - "127.0.0.1:53:53"
+      - "127.0.0.1:53:53/udp"
+        #    network_mode: "host"
+        #    privileged: true
