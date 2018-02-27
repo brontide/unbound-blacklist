@@ -9,6 +9,7 @@ RUN dnf -y install unbound python-unbound bind-utils wget vim && \
 ADD unbound.conf /etc/unbound/unbound.conf
 ADD dns_filter.py /etc/unbound/dns_filter.py
 ADD filter.d /etc/unbound/filter.d
+ADD conf.d /etc/unbound/conf.d
 
 EXPOSE 53:53
 EXPOSE 53:53/udp
