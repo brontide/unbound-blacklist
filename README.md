@@ -4,9 +4,12 @@ This project pairs unbound with a small python plugin that will block DNS resolu
 for hosts in a traditional hostfile blacklist.
 
 ```
-# Place backlists in filter.d
-docker-compose build
-docker-compose up -d
+# Download StevenBlack hostlist
+make download
+# Build docker image
+make build
+# Bring up -d image
+make up
 ```
 
 The docker has a healthcheck so it should be immediatly visible if there are any issues
