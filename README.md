@@ -3,6 +3,28 @@
 This project pairs unbound with a small python plugin that will block DNS resolution
 for hosts in a traditional hostfile blacklist.
 
+
+First, update the docker-compose.yml for your IP you want to listen on.
+
+```yaml
+version: "3.4"
+
+services:
+  unbound:
+    build: .
+    restart: always
+    ports:
+      - "192.168.111.20:53:53"
+      - "192.168.111.20:53:53/udp"
+      - "127.0.0.1:53:53"
+      - "127.0.0.1:53:53/udp"
+```
+
+Edit or update the `Makefile` if you want additional hosts files.
+
+Edit or update the `conf.d` files if you want to add additional unbound
+configs.
+
 ```
 # Download StevenBlack hostlist
 make download
