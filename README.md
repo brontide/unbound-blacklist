@@ -18,3 +18,6 @@ The docker has a healthcheck so it should be immediatly visible if there are any
 
 This is based on fedora because it was one of the few that properly supported the python
 modules without giving me too mcuh grief
+
+This project would not be possible without 
+[https://github.com/cbuijs/unbound-dns-firewall]
