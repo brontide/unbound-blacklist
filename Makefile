@@ -1,6 +1,7 @@
 DC := docker-compose
 
 download:
+	make filter.d
 	curl -o filter.d/StevenBlack.hosts https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
 
 build:
@@ -11,3 +12,6 @@ up:
 
 down:
 	${DC} down	
+
+logs:
+	${DC} logs -f
