@@ -1,7 +1,7 @@
 DC := docker-compose
 
 download:
-	make filter.d
+	mkdir filter.d
 	curl -o filter.d/StevenBlack.hosts https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
 
 build:
