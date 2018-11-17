@@ -7,7 +7,7 @@ backup: ;
 stop: down
 
 download:
-	mkdir filter.d
+	mkdir filter.d || exit 0
 	curl -o filter.d/StevenBlack.hosts https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
 
 build:
