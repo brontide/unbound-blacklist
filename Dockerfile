@@ -5,7 +5,7 @@ RUN dnf -y install unbound python-unbound bind-utils && \
     ln -s /usr/lib64/python2.7/site-packages/unboundmodule.py /etc/unbound/unboundmodule.py && \
     dnf clean all
 
-ADD ftp://ftp.internic.net/domain/named.cache /etc/unbound/root.hints
+ADD http://www.internic.net/domain/named.root /etc/unbound/root.hints
 ADD unbound.conf /etc/unbound/unbound.conf
 ADD dns_filter.py /etc/unbound/dns_filter.py
 ADD filter.d /etc/unbound/filter.d
