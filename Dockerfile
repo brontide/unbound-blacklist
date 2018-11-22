@@ -1,4 +1,4 @@
-FROM fedora
+FROM fedora:28
 MAINTAINER Eric Warnke
 
 RUN dnf -y install unbound python-unbound bind-utils && \
@@ -9,8 +9,8 @@ ADD http://www.internic.net/domain/named.root /etc/unbound/root.hints
 ADD unbound.conf /etc/unbound/unbound.conf
 ADD dns_filter.py /etc/unbound/dns_filter.py
 ADD conf.d /etc/unbound/conf.d
-
 ADD https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts /etc/unbound/filter.d/StevenBlack.hosts
+RUN chown -R unbound /etc/unbound/
 
 EXPOSE 53:53
 EXPOSE 53:53/udp
