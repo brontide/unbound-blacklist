@@ -173,9 +173,11 @@ def operate(id, event, qstate, qdata):
                 for dname, dnstype, value in decodemsg(msg, types=['A','AAAA','CNAME']):
                     #log_info("dns_filter.py: Checkin return %s %s %s"%(dname, dnstype, str(value)))
                     if is_filtered(dname):
+                        log_info("BLOCKED NAME: %s"%dname)
                         blocked = True
                         break
                     if dnstype == 'CNAME' and is_filtered(value):
+                        log_info("BLOCKED CNAME: %s MASKING %s"%(value, dname))
                         blocked = True
                         break
 
