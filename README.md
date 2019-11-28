@@ -1,7 +1,8 @@
 # Blacklist enforcing, recursive DNS resolver
 
 This project pairs unbound with a small python plugin that will block DNS resolution
-for hosts in a traditional hostfile blacklist.
+for hosts in a traditional hostfile blacklist.  Now supports blocking of CNAME replies
+which match a blacklist item.
 
 
 First, update the docker-compose.yml for your IP you want to listen on.
@@ -14,10 +15,10 @@ services:
     build: .
     restart: always
     ports:
-      - "192.168.111.20:53:53"
-      - "192.168.111.20:53:53/udp"
-      - "127.0.0.1:53:53"
-      - "127.0.0.1:53:53/udp"
+      - "192.168.111.20:53:1053"
+      - "192.168.111.20:53:1053/udp"
+      - "127.0.0.1:53:1053"
+      - "127.0.0.1:53:1053/udp"
 ```
 
 Edit or update the `Makefile` if you want additional hosts files.
