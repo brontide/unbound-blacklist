@@ -69,6 +69,11 @@ def is_filtered(name):
     '''
     if name in blacklist:
         return True
+    part = name.split('.')[1:]
+    while part:
+        if '.'.join(part) in blacklist:
+            return True
+        part.pop(0)
     for tag, regexp in matches.items():
         if regexp.match(name):
             blacklist.add(name)
