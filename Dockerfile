@@ -12,8 +12,10 @@ ADD conf.d /etc/unbound/conf.d
 ADD https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts /etc/unbound/filter.d/StevenBlack.hosts
 RUN chown -R unbound /etc/unbound/
 
-EXPOSE 53:53
-EXPOSE 53:53/udp
+EXPOSE 1053
+EXPOSE 1053/udp
+
+USER unbound
 
 HEALTHCHECK CMD dig @127.0.0.1 www.google.com
 

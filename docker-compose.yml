@@ -5,9 +5,9 @@ services:
     build: .
     restart: always
     ports:
-      - "${EXTERNALIP}:53:53"
-      - "${EXTERNALIP}:53:53/udp"
-      - "127.0.0.1:53:53"
-      - "127.0.0.1:53:53/udp"
+      - "${EXTERNALIP}:53:1053"
+      - "${EXTERNALIP}:53:1053/udp"
+      - "127.0.0.1:53:1053"
+      - "127.0.0.1:53:1053/udp"
         #    network_mode: "host"
         #    privileged: true
