@@ -177,7 +177,7 @@ def operate(id, event, qstate, qdata):
                         blocked = True
                         break
                     if dnstype == 'CNAME' and is_filtered(value):
-                        log_info("BLOCKED CNAME: %s MASKING %s"%(value, dname))
+                        log_info("BLOCKED CNAME: %s NAME: %s"%(value, dname))
                         blocked = True
                         break
 
