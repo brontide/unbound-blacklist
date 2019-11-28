@@ -1,4 +1,4 @@
-FROM fedora:28
+FROM fedora:30
 MAINTAINER Eric Warnke
 
 RUN dnf -y install unbound python-unbound bind-utils && \
